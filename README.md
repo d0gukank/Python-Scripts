@@ -1,2 +1,1 @@
 # Python-Scripts
-python scriptleri
