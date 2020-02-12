@@ -1,12 +1,12 @@
 import socket
 
-dlist="""almiraj.dhhmena.com
-almiraj-v2.dhhmena.com
-drone.infra-dev.dhhmena.com
-dev.web.infra-dev.dhhmena.com
-prod.web.infra-dev.dhhmena.com
-stage.web.infra-dev.dhhmena.com
-posmw.dhhmena.com
+dlist="""almiraj.asd.com
+almiraj-v2.asd.com
+drone.infra-dev.asd.com
+dev.web.infra-dev.asd.com
+prod.web.infra-dev.asd.com
+stage.web.infra-dev.asd.com
+posmw.asd.com
 """
 #print dlist.splitlines()
 for x in dlist.splitlines():
