@@ -7,14 +7,14 @@ from binance_chain.wallet import Wallet
 from binance_chain.environment import BinanceEnvironment
 
 prod_env = BinanceEnvironment.get_production_env()
-walletpriv = Wallet('xxxx', prod_env)
+walletpriv = Wallet('xxx', prod_env)
 client = HttpApiClient(env=prod_env)
 
 app = Flask(__name__)
 
-admintg=783083878
-app.config['secret_key']="xxx"
-app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///wallet.db"
+admintg=xxx
+app.config['secret_key']="xxxx"
+app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///xxxx.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db=SQLAlchemy(app)
@@ -43,7 +43,7 @@ def botmessages():
 	
 	if (("message" in data)  and ("text" in data["message"]) and ("from" in data["message"]) and ("username" in data["message"]["from"])):
 
-		if (re.match(rhediye,data["message"]["text"]) and ("reply_to_message" in data['message'])):
+		if (re.match(rhediye,data["message"]["text"]) and ("reply_to_message" in data['message']) and ("username" in data['message']['reply_to_message']['from'])):
 			userid=data['message']['from']['id']
 			replyuserid=data['message']['reply_to_message']['from']['id']
 			replyusername=data['message']['reply_to_message']['from']['username']
@@ -66,7 +66,7 @@ def botmessages():
 					res = client.broadcast_msg(transfer_msg, sync=True)
 					print (res)
 					print (res[0]['hash'])
-					tburl = "https://api.telegram.org/xxxxxx/sendMessage?chat_id=-1001243236277&text=@" + str(replyusername) + " Tebrikler " + str(tip) + " BNB kazandınız.%0A"+"https://explorer.binance.org/tx/"+res[0]['hash']
+					tburl = "https://api.telegram.org/xxx/sendMessage?chat_id=xxx&text=@" + str(replyusername) + " Tebrikler " + str(tip) + " BNB kazandınız.%0A"+"https://explorer.binance.org/tx/"+res[0]['hash']
 					requests.get(tburl)
 					print("%s %s %s %s %s %s %s" % (userid,username,data["message"]["text"],tip,replyuserid,replyusername,replywallet))
 				except:
