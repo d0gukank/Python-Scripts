@@ -7,14 +7,15 @@ from binance_chain.wallet import Wallet
 from binance_chain.environment import BinanceEnvironment
 
 prod_env = BinanceEnvironment.get_production_env()
-walletpriv = Wallet('xxx', prod_env)
+walletpriv = Wallet('xxxx', prod_env)
 client = HttpApiClient(env=prod_env)
-
+#-xx xx
+#-xx
 app = Flask(__name__)
 
-admintg=xxx
-app.config['secret_key']="xxxx"
-app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///xxxx.db"
+admintg=xx
+app.config['secret_key']="xxx"
+app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///xxx.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db=SQLAlchemy(app)
@@ -41,12 +42,19 @@ def botmessages():
 	data=request.json
 	print (data)
 	
-	if (("message" in data)  and ("text" in data["message"]) and ("from" in data["message"]) and ("username" in data["message"]["from"])):
 
-		if (re.match(rhediye,data["message"]["text"]) and ("reply_to_message" in data['message']) and ("username" in data['message']['reply_to_message']['from'])):
+	if (("message" in data)  and ("text" in data["message"]) and ("from" in data["message"])): #and ("username" in data["message"]["from"])):
+
+		if (re.match(rhediye,data["message"]["text"]) and ("reply_to_message" in data['message']) ):
 			userid=data['message']['from']['id']
 			replyuserid=data['message']['reply_to_message']['from']['id']
-			replyusername=data['message']['reply_to_message']['from']['username']
+			#replyusername=data['message']['reply_to_message']['from']['username']
+
+			if ("username" in data['message']['reply_to_message']['from']):
+				replyusername="@"+ data['message']['reply_to_message']['from']['username'] 
+			else: 
+				replyusername=""
+
 			id=User.query.filter_by(userid=replyuserid).first()
 			print (id)
 			print (replyuserid)
@@ -66,7 +74,7 @@ def botmessages():
 					res = client.broadcast_msg(transfer_msg, sync=True)
 					print (res)
 					print (res[0]['hash'])
-					tburl = "https://api.telegram.org/xxx/sendMessage?chat_id=xxx&text=@" + str(replyusername) + " Tebrikler " + str(tip) + " BNB kazandınız.%0A"+"https://explorer.binance.org/tx/"+res[0]['hash']
+					tburl = "https://api.telegram.org/xxx/sendMessage?chat_id=xxx&text=" + str(replyusername) + " Tebrikler " + str(tip) + " BNB kazandınız.%0A"+"https://explorer.binance.org/tx/"+res[0]['hash']
 					requests.get(tburl)
 					print("%s %s %s %s %s %s %s" % (userid,username,data["message"]["text"],tip,replyuserid,replyusername,replywallet))
 				except:
@@ -76,9 +84,14 @@ def botmessages():
 				print("cacik cikti")
 		#adress ekleme		
 		if(re.match(radres,data["message"]["text"])):
+
+			if ("username" in data['message']['from']):
+				username="@"+ data['message']['from']['username'] 
+			else: 
+				username="Null"
 			print("detect adres")
 			userid=data['message']['from']['id']
-			username=data['message']['from']['username']
+			#username=data['message']['from']['username']
 			wallet=re.findall("^\/adresim (.*)$",data["message"]["text"])[0]
 	
 			id=User.query.filter_by(userid=userid).first()
@@ -107,5 +120,6 @@ def botmessages():
 
 if __name__ == "__main__":
 	app.run(host='0.0.0.0', port=80, debug=False)
+
 
 
