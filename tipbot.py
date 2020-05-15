@@ -5,17 +5,25 @@ from binance_chain.http import HttpApiClient
 from binance_chain.messages import TransferMsg
 from binance_chain.wallet import Wallet
 from binance_chain.environment import BinanceEnvironment
+import random
+
+texts= ['You are awesome today', 'You are amazing today', 'You are beautiful', 'Binance bot likes you', 'Keep it up']
+randomtext = (random.choice(texts))
+
+emojis=["🎉", "🤩", "🤗", "🤙", "🎊"]
+randomemoji = (random.choice(emojis))
+
 
 prod_env = BinanceEnvironment.get_production_env()
 walletpriv = Wallet('xxxx', prod_env)
 client = HttpApiClient(env=prod_env)
-#-xx xx
-#-xx
+#-1001243236277 angelxx
+#-445138418
 app = Flask(__name__)
 
-admintg=xx
-app.config['secret_key']="xxx"
-app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///xxx.db"
+admintg=783083878
+app.config['secret_key']="xxxx"
+app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///xxxx.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db=SQLAlchemy(app)
@@ -38,7 +46,7 @@ def helloIndex():
 @app.route('/botmessages', methods=['POST'])
 def botmessages():
 	rhediye="^\/(hediye|tip) \d+\.?\d* bnb$"
-	radres="^\/adresim [a-z0-9]{42}$"
+	radres="^\/myaddress [a-z0-9]{42}$"
 	data=request.json
 	print (data)
 	
@@ -53,7 +61,7 @@ def botmessages():
 			if ("username" in data['message']['reply_to_message']['from']):
 				replyusername="@"+ data['message']['reply_to_message']['from']['username'] 
 			else: 
-				replyusername=""
+				replyusername=data['message']['reply_to_message']['from']['first_name']
 
 			id=User.query.filter_by(userid=replyuserid).first()
 			print (id)
@@ -74,7 +82,10 @@ def botmessages():
 					res = client.broadcast_msg(transfer_msg, sync=True)
 					print (res)
 					print (res[0]['hash'])
-					tburl = "https://api.telegram.org/xxx/sendMessage?chat_id=xxx&text=" + str(replyusername) + " Tebrikler " + str(tip) + " BNB kazandınız.%0A"+"https://explorer.binance.org/tx/"+res[0]['hash']
+					tburl = "https://api.telegram.org/xxxxs/sendMessage?chat_id=11111&text="  + randomtext +" "+str(replyusername) + " Congratulations! You got " + str(tip) + " BNB " + randomemoji +" %0A%0A"+"https://explorer.binance.org/tx/"+res[0]['hash']
+
+
+
 					requests.get(tburl)
 					print("%s %s %s %s %s %s %s" % (userid,username,data["message"]["text"],tip,replyuserid,replyusername,replywallet))
 				except:
@@ -92,7 +103,7 @@ def botmessages():
 			print("detect adres")
 			userid=data['message']['from']['id']
 			#username=data['message']['from']['username']
-			wallet=re.findall("^\/adresim (.*)$",data["message"]["text"])[0]
+			wallet=re.findall("^\/myaddress (.*)$",data["message"]["text"])[0]
 	
 			id=User.query.filter_by(userid=userid).first()
 			#print (id)
@@ -104,6 +115,7 @@ def botmessages():
 			else:
 				print ("id var")
 				id.wallet=wallet
+				id.username=data["message"]["text"]["username"] # ekledim
 				db.session.commit()
 			print("%s %s %s %s" % (userid, username, data["message"]["text"], wallet))
 	
@@ -119,7 +131,8 @@ def botmessages():
 
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', port=80, debug=False)
+	app.run(host='0.0.0.0', debug=False)
+
 
 
 
