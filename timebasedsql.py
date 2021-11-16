@@ -13,8 +13,8 @@ for x in range(1,100):
         r=requests.get(url)
         t2=time.time()
         if float(t2-t1)>6.0:
-            sys.stdout.flush()
             sys.stdout.write(str(chr(i)))
+            sys.stdout.flush()
             data += str(chr(i))
             break
 print data
