@@ -2,31 +2,43 @@ import base64
 import io
 import tempfile
 import time
+import requests
 from PIL import Image
 import cairosvg
 import undetected_chromedriver as uc
 from selenium.webdriver.common.by import By
 from twocaptcha import TwoCaptcha
+import logging
+
+
+logging.basicConfig(filename='my_script_log.log',  # Log file name
+                    level=logging.INFO,  # Logging level
+                    format='%(asctime)s - %(levelname)s - %(message)s')  # Log message format
+
+chatid= 329197090
+token= "7097511988:AAGDai0BCyRQFuQvaUnSBNH_fpHJ-fBvgjs"
+
 
 def get_captcha_code(filepath):
     """Solve captcha using 2Captcha service and return the code."""
     solver = TwoCaptcha('xxxx')
     captcha_id = solver.send(file=filepath, caseSensitive=1)
-    time.sleep(10)  # Wait for the captcha to be solved.
+    time.sleep(20)  # Wait for the captcha to be solved.
     code = solver.get_result(captcha_id)
     return code
 
 def main():
+    logging.info('Script started')
     # Initialize the Chrome driver
     driver = uc.Chrome()
     driver.get("https://consulat.gouv.fr/ambassade-de-france-en-irlande/rendez-vous?name=Visas")
     time.sleep(2)
     
     # Navigate through the website
-    driver.find_element(By.XPATH, "/html/body/div[1]/div/div/header/div/div/div/div[2]/div[2]/div/button").click()
-    time.sleep(0.5)
-    driver.find_element(By.XPATH, "/html/body/div[1]/div/div/header/div/div/div/div[2]/div[2]/div/ul/li[1]").click()
-    time.sleep(1)
+    #driver.find_element(By.XPATH, "/html/body/div[1]/div/div/header/div/div/div/div[2]/div[2]/div/button").click()
+    #time.sleep(0.5)
+    #driver.find_element(By.XPATH, "/html/body/div[1]/div/div/header/div/div/div/div[2]/div[2]/div/ul/li[1]").click()
+    #time.sleep(1)
     
     # Handle Captcha
     print("Captcha please")
@@ -62,12 +74,17 @@ def main():
     try:
         elem_text = driver.find_element(By.XPATH, "/html/body/div[1]/div/div/main/div[2]/div/div/div/div/div[3]/div[2]/div[2]/div/p").text
         print(elem_text)
-        if elem_text == "No appointments are available at the moment but slots will be posted in the coming days.":
+        if elem_text == "Aucun rendez-vous n’est disponible pour le moment mais des créneaux vont être mis en ligne dans les jours à venir.":
             print("No slots available.")
+            requests.post('https://api.telegram.org/bot{0}/sendMessage'.format(token),data={'chat_id': chatid, 'text': "slot yok"}).json()
         else:
+            requests.post('https://api.telegram.org/bot{0}/sendMessage'.format(token),data={'chat_id': chatid, 'text': "slot var"}).json()
             print("Appointment slot might be available. Consider notifying via Telegram.")
     except Exception as e:
         print("An error occurred, consider rechecking. Exception:", e)
+        requests.post('https://api.telegram.org/bot{0}/sendMessage'.format(token),data={'chat_id': chatid, 'text': "slot var exception"}).json()
+
+    logging.info('Script completed')
 
 if __name__ == "__main__":
     main()
