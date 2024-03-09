@@ -15,8 +15,8 @@ logging.basicConfig(filename='my_script_log.log',  # Log file name
                     level=logging.INFO,  # Logging level
                     format='%(asctime)s - %(levelname)s - %(message)s')  # Log message format
 
-chatid= 329197090
-token= "7097511988:AAGDai0BCyRQFuQvaUnSBNH_fpHJ-fBvgjs"
+chatid= 99
+token= "xxx"
 
 
 def get_captcha_code(filepath):
